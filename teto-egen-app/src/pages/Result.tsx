@@ -8,6 +8,7 @@ import { loadCurrentResult, clearCurrentResult, logEvent, saveUserProfile } from
 import { getABConfig, getCTAOrder } from '../utils/abTesting';
 import { analyzePersonality, getTypeColor } from '../utils/testLogic';
 import { getResultContent } from '../data/resultContent';
+import { ABTestConfig } from '../types';
 
 interface ResultData {
   t_pct: number;
@@ -19,7 +20,7 @@ interface ResultData {
 export const Result: React.FC = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState<ResultData | null>(null);
-  const [abConfig, setAbConfig] = useState<any>(null);
+  const [abConfig, setAbConfig] = useState<ABTestConfig | null>(null);
 
   useEffect(() => {
     const loadResult = async () => {

@@ -2,97 +2,26 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GlassCard } from '../components/GlassCard';
 import { GlassButton } from '../components/GlassButton';
-import { ScoreBar } from '../components/ScoreBar';
-import { TEST_QUESTIONS, MBTI_DIAGNOSIS_QUESTIONS } from '../data/questions';
 import { getMatchAnalysis } from '../data/matchContent';
 import { loadCurrentResult, saveMatchHistory, logEvent } from '../utils/storage';
 import { validateMBTI, calculateCompatibility } from '../utils/testLogic';
+import { PartnerDiagnosis } from '../components/match/PartnerDiagnosis';
+import { MatchResultView } from '../components/match/MatchResultView';
+import { MatchResult } from '../types';
 
 export const Match: React.FC = () => {
   const navigate = useNavigate();
 
   // States
   const [diagnosisMode, setDiagnosisMode] = useState<'none' | 'teto' | 'mbti'>('none');
-  const [diagnosisStep, setDiagnosisStep] = useState(0);
-  const [diagnosisScore, setDiagnosisScore] = useState(0); // Raw T score accumulator
-
   const [otherTPct, setOtherTPct] = useState(50);
   const [otherMBTI, setOtherMBTI] = useState('');
   const [error, setError] = useState('');
 
-  const [mbtiScores, setMbtiScores] = useState({ E: 0, I: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 });
-  const [matchResult, setMatchResult] = useState<any>(null); // Replace 'any' with MatchResult type if available
+  const [matchResult, setMatchResult] = useState<MatchResult | null>(null);
   const [showResults, setShowResults] = useState(false);
 
-  // Use the standard 20 questions for partner diagnosis
-  const PARTNER_DIAGNOSIS_QUESTIONS = TEST_QUESTIONS.map(q => ({
-    ...q,
-    text: q.text.replace('저는', '그 사람은').replace('제가', '그 사람이').replace('나의', '그 사람의').replace('내', '그 사람의')
-  }));
-
-  const handleTetoDiagnosis = (isYes: boolean) => {
-    const currentQ = PARTNER_DIAGNOSIS_QUESTIONS[diagnosisStep];
-    let scoreToAdd = 0;
-
-    if (currentQ.type === 'T') {
-      scoreToAdd = isYes ? 4 : 0;
-    } else {
-      scoreToAdd = isYes ? 0 : 4;
-    }
-
-    const newScore = diagnosisScore + scoreToAdd;
-
-    if (diagnosisStep === PARTNER_DIAGNOSIS_QUESTIONS.length - 1) {
-      // Calculate final % (Max based on questions length)
-      const maxScore = PARTNER_DIAGNOSIS_QUESTIONS.length * 4;
-      const finalPct = Math.round((newScore / maxScore) * 100);
-
-      setOtherTPct(finalPct);
-      setDiagnosisMode('none');
-      setDiagnosisStep(0);
-      setDiagnosisScore(0);
-      alert(`진단 완료! 상대의 테토 성향은 약 ${finalPct}% 입니다.`);
-    } else {
-      setDiagnosisScore(newScore);
-      setDiagnosisStep(prev => prev + 1);
-    }
-  };
-
-  const handleMbtiDiagnosis = (isYes: boolean) => {
-    const q = MBTI_DIAGNOSIS_QUESTIONS[diagnosisStep];
-    const newScores = { ...mbtiScores };
-
-    if (isYes) {
-      if (q.dimension) {
-        newScores[q.dimension] = (newScores[q.dimension] || 0) + 1;
-      }
-    } else {
-      const opposite = { 'E': 'I', 'N': 'S', 'T': 'F', 'J': 'P' };
-      if (q.dimension) {
-        const opp = opposite[q.dimension] as keyof typeof mbtiScores;
-        newScores[opp] = (newScores[opp] || 0) + 1;
-      }
-    }
-    setMbtiScores(newScores);
-
-    if (diagnosisStep === MBTI_DIAGNOSIS_QUESTIONS.length - 1) {
-      const resultMBTI = [
-        newScores.E > newScores.I ? 'E' : 'I',
-        newScores.N > newScores.S ? 'N' : 'S',
-        newScores.T > newScores.F ? 'T' : 'F',
-        newScores.J > newScores.P ? 'J' : 'P'
-      ].join('');
-
-      setOtherMBTI(resultMBTI);
-      setDiagnosisMode('none');
-      setDiagnosisStep(0);
-      setMbtiScores({ E: 0, I: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 });
-      alert(`진단 완료! 상대의 MBTI는 ${resultMBTI}로 추정됩니다.`);
-    } else {
-      setDiagnosisStep(prev => prev + 1);
-    }
-  };
-
+  // Load My Result
   const myResult = loadCurrentResult();
 
   const handleCalculate = () => {
@@ -160,210 +89,45 @@ export const Match: React.FC = () => {
   const otherTypeLabel = otherTPct >= 60 ? '테토형' : otherTPct <= 40 ? '에겐형' : '반반(믹스형)';
   const analysis = myResult ? getMatchAnalysis(myResult.type_label as any, otherTypeLabel as any, matchResult ? matchResult.attraction : 0) : null;
 
+  const handleDiagnosisComplete = (result: { type: 'teto' | 'mbti'; value: number | string }) => {
+    if (result.type === 'teto') {
+      setOtherTPct(result.value as number);
+      alert(`진단 완료! 상대의 테토 성향은 약 ${result.value}% 입니다.`);
+    } else {
+      setOtherMBTI(result.value as string);
+      alert(`진단 완료! 상대의 MBTI는 ${result.value}로 추정됩니다.`);
+    }
+    setDiagnosisMode('none');
+  };
+
+  // 1. Result View
   if (showResults && matchResult) {
     return (
-      <div className="min-h-screen pb-20 px-4">
-        <div className="blob-1" />
-        <div className="blob-2" />
-
-        <div className="max-w-md mx-auto pt-8">
-          <GlassCard className="mb-6 text-center" padding="lg">
-            <h1 className="text-2xl font-bold text-charcoal mb-2">
-              우리의 궁합은?
-            </h1>
-            <div className="bg-lovely-pink/10 rounded-xl p-4 mt-4">
-              <p className="text-lg font-bold text-lovely-pink text-center word-break-keep">
-                {analysis?.summary}
-              </p>
-            </div>
-          </GlassCard>
-
-          {/* 상세 분석 카드 */}
-          <GlassCard className="mb-6" padding="md">
-            <h3 className="font-bold text-lg text-charcoal mb-1">
-              {analysis?.title}
-            </h3>
-            <p className="text-sm font-medium text-charcoal-light bg-gray-100 inline-block px-2 py-1 rounded-md mb-4">
-              {analysis?.relationship_type}
-            </p>
-
-            <div className="space-y-6">
-              <div>
-                <span className="text-lg mr-2">🧪</span>
-                <span className="font-semibold text-charcoal text-sm">케미 분석</span>
-                <p className="text-sm text-charcoal-light mt-1 leading-relaxed">
-                  {analysis?.chemistry}
-                </p>
-              </div>
-
-              <div>
-                <span className="text-lg mr-2">❤️</span>
-                <span className="font-semibold text-charcoal text-sm">우리의 강점</span>
-                <p className="text-sm text-charcoal-light mt-1 leading-relaxed">
-                  {analysis?.advice.strength}
-                </p>
-              </div>
-
-              <div>
-                <span className="text-lg mr-2">⚠️</span>
-                <span className="font-semibold text-charcoal text-sm">조심해야 할 점</span>
-                <p className="text-sm text-charcoal-light mt-1 leading-relaxed">
-                  {analysis?.advice.warning}
-                </p>
-              </div>
-
-              <div className="bg-white/80 rounded-lg p-3 border border-lovely-pink/30">
-                <span className="text-lg mr-2">📌</span>
-                <span className="font-semibold text-charcoal text-sm">솔루션</span>
-                <p className="text-sm font-medium text-lovely-pink mt-1">
-                  "{analysis?.advice.action_item}"
-                </p>
-              </div>
-            </div>
-          </GlassCard>
-
-          {/* 끌림 */}
-          <GlassCard className="mb-4" padding="md">
-            <ScoreBar
-              label="끌림"
-              score={matchResult.attraction}
-              color="#FF6FAE"
-            />
-            <p className="text-xs text-charcoal-light mt-2 text-center">
-              {matchResult.attraction >= 85 ? '강렬한 첫눈의 끌림! 도파민 폭발' :
-                matchResult.attraction >= 65 ? '서로 다른 매력에 궁금해지는 사이' :
-                  '편안한 친구 같은 사이'}
-            </p>
-          </GlassCard>
-
-          {/* 안정 */}
-          <GlassCard className="mb-4" padding="md">
-            <ScoreBar
-              label="안정"
-              score={matchResult.stability}
-              color="#2DD4BF"
-            />
-            <p className="text-xs text-charcoal-light mt-2 text-center">
-              {matchResult.stability >= 80 ? '말하지 않아도 통하는 영혼의 단짝' :
-                matchResult.stability >= 60 ? '배려하며 맞춰가는 성숙한 관계' :
-                  '서로의 세계를 이해하는 노력이 필요'}
-            </p>
-          </GlassCard>
-
-          {/* 갈등위험 */}
-          <GlassCard className="mb-6" padding="md">
-            <ScoreBar
-              label="갈등위험"
-              score={matchResult.conflict}
-              color="#F59E0B"
-            />
-            <p className="text-xs text-charcoal-light mt-2 text-center">
-              {matchResult.conflict >= 70 ? '사랑싸움도 격렬한 "톰과 제리"' :
-                matchResult.conflict >= 40 ? '가끔 틱틱대지만 금방 풀리는 사이' :
-                  '물 흐르듯 평온한 무공해 청정구역'}
-            </p>
-          </GlassCard>
-
-          <div className="space-y-3">
-            <GlassButton onClick={() => navigate('/share')} fullWidth size="lg">
-              공유 카드 만들기
-            </GlassButton>
-
-            <GlassButton
-              onClick={() => {
-                setShowResults(false);
-                setMatchResult(null);
-              }}
-              variant="secondary"
-              fullWidth
-            >
-              다른 사람이랑도 해보기
-            </GlassButton>
-
-            <GlassButton
-              onClick={() => navigate('/result')}
-              variant="secondary"
-              fullWidth
-            >
-              내 결과 다시 보기
-            </GlassButton>
-          </div>
-        </div>
-      </div>
+      <MatchResultView
+        matchResult={matchResult}
+        analysis={analysis}
+        onShare={handleInvite}
+        onReset={() => {
+          setShowResults(false);
+          setMatchResult(null);
+        }}
+        onMyResult={() => navigate('/result')}
+      />
     );
   }
 
-  // 진단 화면 (Full Screen)
+  // 2. Diagnosis View
   if (diagnosisMode !== 'none') {
-    const isTeto = diagnosisMode === 'teto';
-
-    // Adjusting variable for loop
-    const activeQuestions = isTeto ? PARTNER_DIAGNOSIS_QUESTIONS : MBTI_DIAGNOSIS_QUESTIONS;
-    const currentQ = activeQuestions[diagnosisStep];
-    const progress = ((diagnosisStep + 1) / activeQuestions.length) * 100;
-
     return (
-      <div className="min-h-screen pb-20 px-4 flex flex-col justify-center">
-        <div className="blob-1" />
-        <div className="blob-2" />
-
-        <div className="max-w-md mx-auto w-full">
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-charcoal-light font-medium">
-                {isTeto ? '테토 성향 진단 중...' : 'MBTI 추리 중...'} ({diagnosisStep + 1}/{activeQuestions.length})
-              </span>
-            </div>
-            <div className="w-full bg-white/50 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-lovely-pink h-full transition-all duration-300 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-
-          <GlassCard className="mb-6" padding="lg">
-            <h3 className="text-xl font-bold text-charcoal mb-8 text-center leading-relaxed word-break-keep">
-              {currentQ.text}
-            </h3>
-
-            <div className="space-y-3">
-              <GlassButton
-                onClick={() => isTeto ? handleTetoDiagnosis(true) : handleMbtiDiagnosis(true)}
-                fullWidth
-                size="lg"
-              >
-                네, 그렇습니다
-              </GlassButton>
-              <GlassButton
-                onClick={() => isTeto ? handleTetoDiagnosis(false) : handleMbtiDiagnosis(false)}
-                variant="secondary"
-                fullWidth
-                size="lg"
-              >
-                아니요, 그렇지 않습니다
-              </GlassButton>
-            </div>
-          </GlassCard>
-
-          <button
-            onClick={() => {
-              if (window.confirm('진단을 취소하고 돌아갈까요?')) {
-                setDiagnosisMode('none');
-                setDiagnosisStep(0);
-                setDiagnosisScore(0);
-                setMbtiScores({ E: 0, I: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 });
-              }
-            }}
-            className="w-full text-center text-sm text-charcoal-light hover:text-charcoal underline p-4"
-          >
-            진단 취소하기
-          </button>
-        </div>
-      </div>
+      <PartnerDiagnosis
+        mode={diagnosisMode}
+        onComplete={handleDiagnosisComplete}
+        onCancel={() => setDiagnosisMode('none')}
+      />
     );
   }
 
+  // 3. Input View (Default)
   return (
     <div className="min-h-screen pb-20 px-4">
       <div className="blob-1" />
@@ -386,10 +150,7 @@ export const Match: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-3 mb-2">
             <GlassButton
-              onClick={() => {
-                setDiagnosisMode('teto');
-                setDiagnosisStep(0);
-              }}
+              onClick={() => setDiagnosisMode('teto')}
               size="sm"
               variant="secondary"
             >
@@ -398,10 +159,7 @@ export const Match: React.FC = () => {
             </GlassButton>
 
             <GlassButton
-              onClick={() => {
-                setDiagnosisMode('mbti');
-                setDiagnosisStep(0);
-              }}
+              onClick={() => setDiagnosisMode('mbti')}
               size="sm"
               variant="secondary"
             >

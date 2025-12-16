@@ -18,7 +18,7 @@ try {
   console.warn('IndexedDB not supported:', error);
 }
 
-console.log("version 2.0 active");
+console.log("version 3.0 active");
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App />
