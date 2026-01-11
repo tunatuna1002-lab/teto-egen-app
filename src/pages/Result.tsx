@@ -123,7 +123,7 @@ export const Result: React.FC = () => {
           </p>
         </GlassCard>
 
-        <AdBanner className="mb-6" />
+
 
 
 
@@ -291,6 +291,9 @@ export const Result: React.FC = () => {
 
       {/* 면책 사항 */}
       <Disclaimer />
+
+      {/* 하단 광고 */}
+      <AdBanner className="max-w-md w-full mx-auto mt-8" />
     </div>
   );
 };

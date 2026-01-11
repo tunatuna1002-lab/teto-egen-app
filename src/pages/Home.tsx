@@ -137,7 +137,7 @@ export const Home: React.FC = () => {
           </GlassCard>
         )}
 
-        <AdBanner className="max-w-sm w-full mx-auto" />
+
 
         {/* 특징 카드 */}
 
@@ -176,6 +176,9 @@ export const Home: React.FC = () => {
 
       {/* 면책 사항 */}
       <Disclaimer />
+
+      {/* 하단 광고 */}
+      <AdBanner className="max-w-sm w-full mx-auto mt-8" />
     </div>
   );
 };

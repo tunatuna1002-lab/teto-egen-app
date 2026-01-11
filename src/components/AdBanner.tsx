@@ -40,7 +40,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({
     }, []);
 
     return (
-        <div className={`ad-container my-8 overflow-hidden flex justify-center min-h-[100px] bg-gray-50/50 rounded-lg ${className}`}>
+        <div className={`ad-container overflow-hidden flex justify-center min-h-[100px] bg-gray-50/50 rounded-lg ${className}`}>
             <ins
                 className="adsbygoogle"
                 style={{ display: 'block' }}
