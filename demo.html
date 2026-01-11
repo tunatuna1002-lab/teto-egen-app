@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테토·에겐 게이지 - 데모</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+        
+        /* Glassmorphism 스타일 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            pointer-events: none;
+        }
+        
+        .glass-button {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .glass-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            pointer-events: none;
+        }
+        
+        .glass-button:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .glass-button:active {
+            transform: scale(0.98);
+        }
+        
+        .glass-button-primary {
+            background: linear-gradient(135deg, #FF6FAE 0%, #6B7CFF 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .glass-button-secondary {
+            color: #0f172a;
+        }
+        
+        .glass-button-secondary:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* 배경 블롭 */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.2;
+            animation: blob 7s infinite;
+        }
+        
+        .blob-1 {
+            background: rgba(120, 100, 255, 0.18);
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+        }
+        
+        .blob-2 {
+            background: rgba(0, 170, 255, 0.14);
+            top: -50px;
+            right: -100px;
+            width: 350px;
+            height: 350px;
+            animation-delay: 2s;
+        }
+        
+        .blob-3 {
+            background: rgba(255, 120, 170, 0.12);
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            animation-delay: 4s;
+        }
+        
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+        
+        /* 배경 그라데이션 */
+        .bg-gradient {
+            background: linear-gradient(135deg, #F7F8FF 0%, #F6F3FF 50%, #FFF6FB 100%);
+        }
+        
+        /* 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(15, 23, 42, 0.2);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(15, 23, 42, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gradient min-h-screen">
+    <!-- 배경 블롭 -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    
+    <!-- 메인 컨테이너 -->
+    <div class="min-h-screen pb-20 px-4">
+        <!-- 헤더 -->
+        <div class="max-w-md mx-auto pt-8">
+            <!-- 메인 카드 -->
+            <div class="glass-card p-8 mb-8 max-w-sm mx-auto">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4 leading-tight text-center">
+                    테토·에겐 게이지
+                    <span class="block text-2xl font-semibold text-gray-600 mt-2">
+                        + MBTI 궁합 리포트
+                    </span>
+                </h1>
+                
+                <p class="text-lg text-gray-600 mb-6 text-center">
+                    2분 컷. 재미는 크게. 단정은 작게.
+                </p>
+                
+                <div class="space-y-4">
+                    <button class="glass-button glass-button-primary w-full px-6 py-3 text-base">
+                        테스트 시작
+                    </button>
+                    
+                    <button class="glass-button glass-button-secondary w-full px-6 py-3 text-base">
+                        궁합 바로 보기
+                    </button>
+                    
+                    <button class="text-sm text-gray-500 hover:text-gray-700 transition-colors underline w-full">
+                        이게 뭐예요?
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 특징 카드들 -->
+            <div class="grid grid-cols-1 gap-4 max-w-sm mx-auto">
+                <div class="glass-card p-6 text-center">
+                    <div class="text-2xl mb-2">⚡</div>
+                    <h3 class="font-semibold text-gray-900 mb-1">빠른 테스트</h3>
+                    <p class="text-sm text-gray-600">12문항으로 끝내는 간단한 성향 체크</p>
+                </div>
+                
+                <div class="glass-card p-6 text-center">
+                    <div class="text-2xl mb-2">💕</div>
+                    <h3 class="font-semibold text-gray-900 mb-1">MBTI 궁합</h3>
+                    <p class="text-sm text-gray-600">성격 유형으로 보는 관계 가능성</p>
+                </div>
+                
+                <div class="glass-card p-6 text-center">
+                    <div class="text-2xl mb-2">📱</div>
+                    <h3 class="font-semibold text-gray-900 mb-1">공유 가능</h3>
+                    <p class="text-sm text-gray-600">예쁜 카드로 결과 공유하기</p>
+                </div>
+            </div>
+            
+            <!-- 결과 예시 카드 -->
+            <div class="glass-card p-6 mt-8">
+                <h3 class="font-semibold text-gray-900 mb-4 text-center">결과 예시</h3>
+                
+                <div class="text-center mb-4">
+                    <div class="text-4xl font-bold mb-2" style="color: #FF6FAE;">
+                        75%
+                    </div>
+                    <div class="inline-block px-4 py-2 bg-gradient-to-r from-pink-400 to-pink-500 text-white rounded-full text-sm font-semibold">
+                        테토형
+                    </div>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">끌림</span>
+                        <span class="text-sm font-bold text-gray-900">80%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-pink-400 h-2 rounded-full" style="width: 80%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">안정</span>
+                        <span class="text-sm font-bold text-gray-900">65%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-teal-400 h-2 rounded-full" style="width: 65%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">갈등위험</span>
+                        <span class="text-sm font-bold text-gray-900">45%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 45%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 공유 카드 예시 -->
+            <div class="glass-card p-6 mt-8">
+                <h3 class="font-semibold text-gray-900 mb-4 text-center">공유 카드 예시</h3>
+                
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- 미니멀 -->
+                    <div class="bg-gradient-to-br from-white/90 to-white/70 rounded-2xl p-6 text-center">
+                        <div class="text-3xl font-bold mb-2" style="color: #FF6FAE;">75%</div>
+                        <div class="text-lg font-semibold text-gray-900 mb-2">내 테토 게이지</div>
+                        <div class="inline-block px-3 py-1 bg-pink-400 text-white rounded-full text-xs">
+                            테토형
+                        </div>
+                    </div>
+                    
+                    <!-- 밈 폭발 -->
+                    <div class="bg-gradient-to-br from-pink-100/90 to-blue-100/90 rounded-2xl p-6 text-center">
+                        <div class="text-2xl mb-2">⚡</div>
+                        <div class="text-xl font-bold text-gray-900 mb-2">테토형</div>
+                        <div class="text-sm text-gray-600 mb-2">행동이 먼저인 나는</div>
+                        <div class="bg-white/80 rounded-lg p-2">
+                            <span class="text-lg font-bold" style="color: #FF6FAE;">75%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 연프 감성 -->
+                    <div class="bg-gradient-to-br from-orange-100/90 via-pink-100/90 to-purple-100/90 rounded-2xl p-6 text-center relative">
+                        <div class="absolute top-4 left-4 text-lg">💫</div>
+                        <div class="absolute top-8 right-6 text-sm">⭐</div>
+                        <div class="text-2xl font-bold text-gray-900 mb-2">시그널</div>
+                        <div class="text-sm text-gray-600 mb-4">연애 성향 리포트</div>
+                        <div class="bg-white/90 rounded-xl p-4 mb-2">
+                            <span class="text-2xl font-bold" style="color: #FF6FAE;">75%</span>
+                        </div>
+                        <div class="inline-block px-3 py-1 bg-pink-400 text-white rounded-full text-xs">
+                            테토형
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 네비게이션 예시 -->
+            <div class="glass-card rounded-t-3xl border-t border-white/70 mt-8">
+                <div class="flex justify-around items-center py-3 px-4">
+                    <button class="flex flex-col items-center space-y-1 px-3 py-2 rounded-xl text-pink-500 bg-white/20">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                        <span class="text-xs font-medium">테스트</span>
+                    </button>
+                    
+                    <button class="flex flex-col items-center space-y-1 px-3 py-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-white/10">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span class="text-xs font-medium">결과</span>
+                    </button>
+                    
+                    <button class="flex flex-col items-center space-y-1 px-3 py-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-white/10">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A2.996 2.996 0 0 0 17.06 6H16c-.84 0-1.59.37-2.09.97l-2.66 3.35c-.42.53-.66 1.19-.66 1.88v5H8V9.5a3.5 3.5 0 0 1 6.38-2.09l2.73-3.45A5.5 5.5 0 0 0 14 3V1h-2v2H8V1H6v2.5c0 .83.34 1.58.88 2.12L4.5 9.5V18h2v-6h2v6h2v-6h2v6h2z"/>
+                        </svg>
+                        <span class="text-xs font-medium">궁합</span>
+                    </button>
+                    
+                    <button class="flex flex-col items-center space-y-1 px-3 py-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-white/10">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v-6h-2v6zm0-8h2V7h-2v2z"/>
+                        </svg>
+                        <span class="text-xs font-medium">알아보기</span>
+                    </button>
+                </div>
+                <div class="h-4"></div>
+            </div>
+            
+            <!-- 면책 사항 -->
+            <div class="text-center py-3 px-4">
+                <p class="text-xs text-gray-500">
+                    밈 테스트(비의학) / 과몰입 금지 / 사람 평가 금지
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 간단한 인터랙션
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.textContent.includes('테스트 시작')) {
+                    alert('테스트 시작! (실제 앱에서는 테스트 페이지로 이동)');
+                } else if (this.textContent.includes('궁합 바로 보기')) {
+                    alert('궁합 페이지로 이동! (실제 앱에서는 궁합 페이지로 이동)');
+                } else if (this.textContent.includes('이게 뭐예요?')) {
+                    alert('소개 페이지로 이동! (실제 앱에서는 소개 페이지로 이동)');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

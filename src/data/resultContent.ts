@@ -1,0 +1,100 @@
+
+export interface ResultContent {
+    range: [number, number];
+    title: string;
+    subtitle: string;
+    description: string[];
+    features: {
+        strength: string;
+        weakness: string;
+        chemistry: string;
+    };
+    quote: string;
+}
+
+export const RESULT_CONTENTS: ResultContent[] = [
+    {
+        range: [0, 29],
+        title: "걸어 다니는 공감 자판기",
+        subtitle: "Power Egen (감성 1000%)",
+        description: [
+            "당신은 '환승연애' 나가면 첫날부터 모든 출연자의 멘탈을 케어해 줄 사람입니다.",
+            "미묘한 공기의 흐름까지 읽어내는 '눈치 100단'이라, 상대방이 말하기도 전에 기분을 맞춰주는 능력이 탁월하죠.",
+            "하지만 가끔은 남의 감정까지 내 것처럼 떠안아서 혼자 지치기도 합니다."
+        ],
+        features: {
+            strength: "상대의 마음에 깊이 공감하고, 그 사람 편이 되어주는 따뜻함",
+            weakness: "거절을 잘 못해서 속병 앓는 경우가 많음 (착한 아이 콤플렉스 주의)",
+            chemistry: "당신의 감정을 논리적으로 분석하려 들지 않고, 그냥 안아주는 사람"
+        },
+        quote: "\"네가 울면 나도 눈물이 나... (이미 울고 있음)\""
+    },
+    {
+        range: [30, 45],
+        title: "센스 만점 관계 조율러",
+        subtitle: "Active Egen (감성 > 이성)",
+        description: [
+            "분위기 파악이 빠르고 적재적소에 리액션을 날려주는 '사회생활 만레벨' 유형입니다.",
+            "감성적이지만 현실 감각도 있어서, 무조건 울기보다는 '위로와 응원'을 적절히 섞어서 건넬 줄 알죠.",
+            "연애할 때 상대방이 가장 편안함을 느끼는, '대화가 잘 통하는' 베스트 파트너입니다."
+        ],
+        features: {
+            strength: "유연한 사고방식과 다정함을 겸비한 '소통 능력'",
+            weakness: "남 눈치를 보느라 진짜 내가 하고 싶은 말을 삼킬 때가 있음",
+            chemistry: "내 배려를 당연하게 여기지 않고 고마워할 줄 아는 사람"
+        },
+        quote: "\"그럴 수도 있지! (속으로는 '진짜? 와...')\""
+    },
+    {
+        range: [46, 54],
+        title: "이성과 감성의 황금 밸런스",
+        subtitle: "Hybrid (반반 치킨형)",
+        description: [
+            "축하합니다! 희귀한 '하이브리드' 유전자를 보유하셨군요.",
+            "회사에서는 프로 일잘러(T), 연인 앞에서는 애교쟁이(F)로 변신이 가능한 '태세 전환'의 달인입니다.",
+            "상황에 맞춰 카멜레온처럼 변할 수 있는 당신은, 어떤 유형의 사람과도 무난하게 잘 섞이는 '만능열쇠' 같은 존재입니다."
+        ],
+        features: {
+            strength: "객관적인 판단력과 따뜻한 마음을 동시에 가짐",
+            weakness: "이도 저도 아닌 것 같아 혼란스러울 때가 있음 (결정장애 올 수도)",
+            chemistry: "나의 양면성을 모두 이해해주고 맞춰주는 유연한 사람"
+        },
+        quote: "\"음... 머리로는 이해가는데 마음은 좀 그렇네.\""
+    },
+    {
+        range: [55, 79],
+        title: "다정함이 묻어있는 팩트 폭격기",
+        subtitle: "Active Teto (이성 > 감성)",
+        description: [
+            "당신은 '솔루션 없는 위로는 고문'이라고 생각하는 실용주의자입니다.",
+            "무조건 편들어주기보다는, 진짜 상대방에게 도움이 되는 '현실적인 조언'을 해주는 게 사랑이라고 믿죠.",
+            "겉으로는 차가워 보일 수 있지만, 사실 누구보다 상대의 미래를 걱정하는 '츤데레' 스타일입니다."
+        ],
+        features: {
+            strength: "문제가 생기면 가장 빠르고 확실하게 해결해주는 듬직함",
+            weakness: "공감이 필요한 타이밍에 해결책부터 꺼내서 갑분싸 만들기도 함",
+            chemistry: "내 조언을 잔소리가 아닌 애정으로 받아들여주는 성장 지향적인 사람"
+        },
+        quote: "\"울지 말고 내 말 들어봐. 이렇게 하면 해결된다니까?\""
+    },
+    {
+        range: [80, 100],
+        title: "효율만이 살길이다, 인간 AI",
+        subtitle: "Power Teto (이성 1000%)",
+        description: [
+            "감정 소모는 비효율! 목표 달성을 위해 최적화된 '성공 지향형' 인간입니다.",
+            "연애도 일처럼 '분석'하고 '공략'하려는 경향이 있어, 썸 탈 때 엑셀로 정리할 기세네요.",
+            "하지만 내 사람이라고 판단되면, 누구보다 확실하게 책임지고 '내 거'로 만드는 박력 있는 스타일이기도 합니다."
+        ],
+        features: {
+            strength: "흔들리지 않는 멘탈과 정확한 판단력 (리더감)",
+            weakness: "가끔 로봇 같다는 소리를 들음 ('너 T야?' 1일 1회 듣기 가능)",
+            chemistry: "나의 무뚝뚝함 속에 숨겨진 진심을 알아봐 주는 섬세한 사람"
+        },
+        quote: "\"왜 화난 거야? (진짜 모름, 싸우자는 거 아님)\""
+    }
+];
+
+export const getResultContent = (tPct: number): ResultContent => {
+    return RESULT_CONTENTS.find(content => tPct >= content.range[0] && tPct <= content.range[1]) || RESULT_CONTENTS[2];
+};
