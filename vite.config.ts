@@ -13,7 +13,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true, // Enable sourcemaps for debugging
-    minify: false, // Disable minification to debug build crash and runtime errors
     // Removed manualChunks to avoid potential Rollup issues
   },
 })

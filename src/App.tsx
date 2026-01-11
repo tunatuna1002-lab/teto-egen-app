@@ -14,6 +14,8 @@ const Share = React.lazy(() => import('./pages/Share').then(module => ({ default
 const About = React.lazy(() => import('./pages/About').then(module => ({ default: module.About })));
 const Reward = React.lazy(() => import('./pages/Reward').then(module => ({ default: module.Reward })));
 const FeatureDetail = React.lazy(() => import('./pages/FeatureDetail').then(module => ({ default: module.FeatureDetail })));
+const Privacy = React.lazy(() => import('./pages/Privacy').then(module => ({ default: module.Privacy })));
+const Terms = React.lazy(() => import('./pages/Terms').then(module => ({ default: module.Terms })));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center text-charcoal-light">
@@ -43,6 +45,8 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/reward" element={<Reward />} />
               <Route path="/feature/:id" element={<FeatureDetail />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
             </Routes>
           </Suspense>
           <Navigation />
