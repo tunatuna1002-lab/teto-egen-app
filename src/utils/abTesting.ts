@@ -13,11 +13,27 @@ function hashString(str: string): number {
 }
 
 // 사용자 ID 생성 (고정)
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for older browsers or insecure contexts
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 function getUserId(): string {
   let userId = localStorage.getItem('user_id');
   if (!userId) {
-    userId = crypto.randomUUID();
-    localStorage.setItem('user_id', userId);
+    userId = generateUUID();
+    try {
+      localStorage.setItem('user_id', userId);
+    } catch (e) {
+      console.warn('LocalStorage write failed:', e);
+    }
   }
   return userId;
 }
@@ -26,7 +42,7 @@ function getUserId(): string {
 function assignBucket(userId: string): ABBucket {
   const hash = hashString(userId);
   const bucketIndex = hash % 3;
-  
+
   const buckets: ABBucket[] = ['A', 'B', 'C'];
   return buckets[bucketIndex];
 }
@@ -44,29 +60,29 @@ export function initializeABTest(): ABTestConfig {
   if (existing) {
     return existing;
   }
-  
+
   // 새 설정 생성
   const userId = getUserId();
   const config: ABTestConfig = {
     bucket: assignBucket(userId),
     palette: assignPalette(userId)
   };
-  
+
   // 저장
   saveABConfig(config);
-  
+
   // 이벤트 로깅
-  logEvent('ab_bucket_assigned', { 
+  logEvent('ab_bucket_assigned', {
     bucket: config.bucket,
     palette: config.palette,
-    userId 
+    userId
   });
-  
-  logEvent('palette_assigned', { 
+
+  logEvent('palette_assigned', {
     palette: config.palette,
-    userId 
+    userId
   });
-  
+
   return config;
 }
 
@@ -76,7 +92,7 @@ export function getABConfig(): ABTestConfig {
   if (config) {
     return config;
   }
-  
+
   return initializeABTest();
 }
 
@@ -102,7 +118,7 @@ export function calculateMetrics(events: any[]) {
   const inviteFills = events.filter(e => e.type === 'invite_filled').length;
   const rewardOpens = events.filter(e => e.type === 'reward_open').length;
   const rewardCompletes = events.filter(e => e.type === 'reward_complete').length;
-  
+
   return {
     shareRate: resultViews > 0 ? shareCompletes / resultViews : 0,
     inviteConversion: inviteOpens > 0 ? inviteFills / inviteOpens : 0,

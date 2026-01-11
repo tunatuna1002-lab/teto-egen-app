@@ -29,20 +29,29 @@ const STORAGE_KEYS = {
 
 // 현재 테스트 결과 저장/불러오기
 export function saveCurrentResult(result: TestResult): void {
-  localStorage.setItem(STORAGE_KEYS.CURRENT_RESULT, JSON.stringify(result));
+  try {
+    localStorage.setItem(STORAGE_KEYS.CURRENT_RESULT, JSON.stringify(result));
+  } catch (e) {
+    console.warn('LocalStorage write failed:', e);
+  }
 }
 
 export function loadCurrentResult(): TestResult | null {
-  const data = localStorage.getItem(STORAGE_KEYS.CURRENT_RESULT);
-  if (!data) return null;
-
   try {
-    const parsed = JSON.parse(data);
-    return {
-      ...parsed,
-      created_at: new Date(parsed.created_at)
-    };
-  } catch {
+    const data = localStorage.getItem(STORAGE_KEYS.CURRENT_RESULT);
+    if (!data) return null;
+
+    try {
+      const parsed = JSON.parse(data);
+      return {
+        ...parsed,
+        created_at: new Date(parsed.created_at)
+      };
+    } catch {
+      return null;
+    }
+  } catch (e) {
+    console.warn('LocalStorage read failed:', e);
     return null;
   }
 }
@@ -53,16 +62,25 @@ export function clearCurrentResult(): void {
 
 // A/B 테스트 설정 저장/불러오기
 export function saveABConfig(config: any): void {
-  localStorage.setItem(STORAGE_KEYS.AB_CONFIG, JSON.stringify(config));
+  try {
+    localStorage.setItem(STORAGE_KEYS.AB_CONFIG, JSON.stringify(config));
+  } catch (e) {
+    console.warn('LocalStorage write failed:', e);
+  }
 }
 
 export function loadABConfig(): any {
-  const data = localStorage.getItem(STORAGE_KEYS.AB_CONFIG);
-  if (!data) return null;
-
   try {
-    return JSON.parse(data);
-  } catch {
+    const data = localStorage.getItem(STORAGE_KEYS.AB_CONFIG);
+    if (!data) return null;
+
+    try {
+      return JSON.parse(data);
+    } catch {
+      return null;
+    }
+  } catch (e) {
+    console.warn('LocalStorage read failed:', e);
     return null;
   }
 }
