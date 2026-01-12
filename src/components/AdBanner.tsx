@@ -23,8 +23,9 @@ declare global {
 export const AdBanner: React.FC<AdBannerProps> = ({
     // Replace with your actual AdSense Publisher ID (e.g., "ca-pub-1234567890123456")
     client = "ca-pub-8933937663555578",
-    // Replace with your actual Ad Slot ID (e.g., "1234567890")
-    slot = "XXXXXXXXXX",
+
+    // Ad Slot ID from Google AdSense (Display Ad - Square/Response)
+    slot = "5232908043",
     format = "auto",
     responsive = "true",
     className = ""
