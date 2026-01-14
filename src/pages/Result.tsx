@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { GlassCard } from '../components/GlassCard';
 import { GlassButton } from '../components/GlassButton';
 import { TypeBadge } from '../components/TypeBadge';
+import { SEO } from '../components/SEO';
 import { Disclaimer } from '../components/Disclaimer';
 import { AdBanner } from '../components/AdBanner';
 import { loadCurrentResult, clearCurrentResult, logEvent, saveUserProfile } from '../utils/storage';
@@ -100,6 +101,10 @@ export const Result: React.FC = () => {
 
   return (
     <div className="min-h-screen pb-20 px-4">
+      <SEO
+        title={`나의 테토 점수는 ${result.t_pct}% - ${content.label}`}
+        description={`테토 성향 분석 결과: ${rawContent.subtitle}. ${rawContent.description[0]}`}
+      />
       <div className="blob-1" />
       <div className="blob-2" />
 
@@ -176,6 +181,18 @@ export const Result: React.FC = () => {
                 <p className="text-xs text-charcoal-light">{rawContent.features.chemistry}</p>
               </div>
             </div>
+          </div>
+        </GlassCard>
+
+        {/* 조언 카드 (New for AdSense Quality) */}
+        <GlassCard className="mb-6" padding="md">
+          <h3 className="font-semibold text-charcoal mb-3">
+            💡 Teto-Egen Lab.의 제언
+          </h3>
+          <div className="bg-lovely-pink/5 border border-lovely-pink/20 rounded-xl p-4">
+            <p className="text-sm text-charcoal leading-relaxed word-break-keep">
+              {rawContent.advice}
+            </p>
           </div>
         </GlassCard>
 
