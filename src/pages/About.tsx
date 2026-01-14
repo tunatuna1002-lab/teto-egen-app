@@ -90,6 +90,18 @@ export const About: React.FC = () => {
           </div>
         </GlassCard>
 
+        <GlassCard className="mb-6" padding="md">
+          <h3 className="font-semibold text-charcoal mb-3">
+            📧 Contact Us
+          </h3>
+          <p className="text-sm text-charcoal-light mb-2">
+            서비스 이용 문의 및 제휴 제안
+          </p>
+          <a href="mailto:catinthefolder@gmail.com" className="text-lovely-pink hover:underline font-medium">
+            catinthefolder@gmail.com
+          </a>
+        </GlassCard>
+
         <div className="space-y-3">
           <GlassButton onClick={() => navigate('/test')} fullWidth size="lg">
             내 성향 분석 시작하기
