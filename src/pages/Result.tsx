@@ -80,6 +80,11 @@ export const Result: React.FC = () => {
     navigate('/test');
   };
 
+  const handleFaceMatch = () => {
+    logEvent('face_match_start', { source: 'result' });
+    navigate('/face-match');
+  };
+
   if (!result || !abConfig) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -294,6 +299,20 @@ export const Result: React.FC = () => {
             }
           })}
         </div>
+
+        {/* 관상 분석 버튼 */}
+        <GlassCard className="mb-6 text-center" padding="md">
+          <p className="text-sm text-charcoal-light mb-3">
+            🐶🐱 외모와 성격의 반전 매력을 찾아보세요!
+          </p>
+          <GlassButton
+            onClick={handleFaceMatch}
+            variant="secondary"
+            fullWidth
+          >
+            관상 + 심리 케미 분석하기
+          </GlassButton>
+        </GlassCard>
 
         {/* 다시하기 버튼 */}
         <div className="text-center">

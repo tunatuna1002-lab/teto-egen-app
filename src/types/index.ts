@@ -135,7 +135,10 @@ export type EventType =
   | 'ab_bucket_assigned'
   | 'palette_assigned'
   | 'deep_analysis_start'
-  | 'deep_analysis_complete';
+  | 'deep_analysis_complete'
+  | 'face_match_start'
+  | 'face_match_complete'
+  | 'face_match_share';
 
 export interface AppEvent {
   type: EventType;

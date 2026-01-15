@@ -16,6 +16,7 @@ const Reward = React.lazy(() => import('./pages/Reward').then(module => ({ defau
 const FeatureDetail = React.lazy(() => import('./pages/FeatureDetail').then(module => ({ default: module.FeatureDetail })));
 const Privacy = React.lazy(() => import('./pages/Privacy').then(module => ({ default: module.Privacy })));
 const Terms = React.lazy(() => import('./pages/Terms').then(module => ({ default: module.Terms })));
+const FaceMatch = React.lazy(() => import('./pages/FaceMatch').then(module => ({ default: module.FaceMatch })));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center text-charcoal-light">
@@ -47,6 +48,7 @@ function App() {
               <Route path="/feature/:id" element={<FeatureDetail />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/face-match" element={<FaceMatch />} />
             </Routes>
           </Suspense>
           <Navigation />
