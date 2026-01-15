@@ -7,6 +7,13 @@ export type FaceType = 'dog' | 'cat';
 export type TetoLevel = 'powerF' | 'activeF' | 'hybrid' | 'activeT' | 'powerT';
 export type MBTIGroup = 'analyst' | 'diplomat' | 'sentinel' | 'explorer';
 
+export interface VibeData {
+    themeColor: string;       // 주조색 (예: #FF6FAE)
+    auraGradient: [string, string]; // 배경 그라데이션
+    glassOpacity: number;     // 유리 투명도 (0.5 ~ 0.8)
+    keywords: string[];       // 분위기 키워드
+}
+
 export interface FaceChemistryResult {
     faceType: FaceType;
     tetoLevel: TetoLevel;
@@ -16,6 +23,7 @@ export interface FaceChemistryResult {
     description: string;
     traits: string[];
     emoji: string;
+    vibe: VibeData; // ✨ NEW: Dynamic Vibe System
 }
 
 // MBTI를 그룹으로 분류
@@ -41,8 +49,17 @@ export const getTetoLevel = (tPct: number): TetoLevel => {
     return 'powerT';
 };
 
+// 캐릭터 데이터 (vibe는 동적 생성되므로 제외)
+interface CharacterData {
+    characterName: string;
+    subtitle: string;
+    description: string;
+    traits: string[];
+    emoji: string;
+}
+
 // 40가지 캐릭터 데이터
-const FACE_CHEMISTRY_DATA: Record<string, Omit<FaceChemistryResult, 'faceType' | 'tetoLevel' | 'mbtiGroup'>> = {
+const FACE_CHEMISTRY_DATA: Record<string, CharacterData> = {
     // 🐶 강아지상 + 파워F (0-29%)
     'dog_powerF_analyst': {
         characterName: '논리적인 순둥이',
@@ -358,11 +375,15 @@ export const getFaceChemistry = (
     const key = `${faceType}_${tetoLevel}_${mbtiGroup}`;
     const data = FACE_CHEMISTRY_DATA[key] || FACE_CHEMISTRY_DATA['dog_hybrid_diplomat'];
 
+    // ✨ Dynamic Vibe 생성
+    const vibe = generateVibe(faceType, tetoLevel, mbtiGroup);
+
     return {
         faceType,
         tetoLevel,
         mbtiGroup,
-        ...data
+        ...data,
+        vibe
     };
 };
 
@@ -398,4 +419,60 @@ export const getTetoLevelLabel = (level: TetoLevel): string => {
  */
 export const getFaceTypeLabel = (type: FaceType): string => {
     return type === 'dog' ? '🐶 강아지상' : '🐱 고양이상';
+};
+
+/**
+ * ✨ Dynamic Vibe System
+ * 성격 조합에 따라 UI를 제어하는 Vibe 데이터 생성
+ */
+export const generateVibe = (
+    faceType: FaceType,
+    tetoLevel: TetoLevel,
+    mbtiGroup: MBTIGroup
+): VibeData => {
+    // 기본 색상 팔레트
+    const colorPalettes = {
+        // 강아지상: 따뜻한 톤
+        dog: {
+            powerF: { theme: '#FF9A9E', gradient: ['#FFB6C1', '#FFF0F5'] as [string, string] },
+            activeF: { theme: '#FFB347', gradient: ['#FFECD2', '#FCB69F'] as [string, string] },
+            hybrid: { theme: '#DDA0DD', gradient: ['#E0C3FC', '#8EC5FC'] as [string, string] },
+            activeT: { theme: '#87CEEB', gradient: ['#89F7FE', '#66A6FF'] as [string, string] },
+            powerT: { theme: '#6B7CFF', gradient: ['#667eea', '#764ba2'] as [string, string] }
+        },
+        // 고양이상: 시크한 톤
+        cat: {
+            powerF: { theme: '#DDA0DD', gradient: ['#E8DAEF', '#D2B4DE'] as [string, string] },
+            activeF: { theme: '#B8B8D1', gradient: ['#C9D6FF', '#E2E2E2'] as [string, string] },
+            hybrid: { theme: '#9B59B6', gradient: ['#8E44AD', '#3498DB'] as [string, string] },
+            activeT: { theme: '#5DADE2', gradient: ['#4FACFE', '#00F2FE'] as [string, string] },
+            powerT: { theme: '#2C3E50', gradient: ['#2C3E50', '#4CA1AF'] as [string, string] }
+        }
+    };
+
+    // MBTI 그룹에 따른 키워드
+    const groupKeywords: Record<MBTIGroup, string[]> = {
+        analyst: ['논리적', '전략적', '명석함'],
+        diplomat: ['감성적', '진정성', '따뜻함'],
+        sentinel: ['신뢰감', '안정적', '책임감'],
+        explorer: ['자유로움', '즉흥적', '에너지']
+    };
+
+    // 테토 레벨에 따른 투명도 (T 성향일수록 투명하게)
+    const opacityMap: Record<TetoLevel, number> = {
+        powerF: 0.75,  // 불투명 (따뜻하고 포근한 느낌)
+        activeF: 0.7,
+        hybrid: 0.65,
+        activeT: 0.6,
+        powerT: 0.55   // 투명 (쿨하고 명료한 느낌)
+    };
+
+    const palette = colorPalettes[faceType][tetoLevel];
+
+    return {
+        themeColor: palette.theme,
+        auraGradient: palette.gradient,
+        glassOpacity: opacityMap[tetoLevel],
+        keywords: groupKeywords[mbtiGroup]
+    };
 };

@@ -5,7 +5,7 @@ interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
   padding?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'hero';
+  variant?: 'default' | 'hero' | 'ultra';
 }
 
 export const GlassCard: React.FC<GlassCardProps> = ({
@@ -22,13 +22,14 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   }[padding];
 
   const variantClasses = {
-    default: 'rounded-2xl',
-    hero: 'rounded-3xl'
+    default: 'glass-card',
+    hero: 'glass-card rounded-[2rem]',
+    ultra: 'glass-panel-ultra'
   }[variant];
 
   return (
     <div
-      className={`glass-card ${paddingClasses} ${variantClasses} ${className}`}
+      className={`${paddingClasses} ${variantClasses} ${className}`}
       {...props}
     >
       {children}

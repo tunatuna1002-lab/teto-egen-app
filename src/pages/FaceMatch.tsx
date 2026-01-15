@@ -153,25 +153,56 @@ export const FaceMatch: React.FC = () => {
                 {/* 결과 화면 */}
                 {chemistryResult && (
                     <>
+                        {/* ✨ Dynamic Vibe Background */}
+                        <div
+                            className="fixed inset-0 -z-10 transition-all duration-1000"
+                            style={{
+                                background: `linear-gradient(135deg, ${chemistryResult.vibe.auraGradient[0]}, ${chemistryResult.vibe.auraGradient[1]})`
+                            }}
+                        />
+
                         {/* 캐릭터 카드 */}
-                        <GlassCard className="mb-6 text-center" padding="lg" variant="hero">
+                        <GlassCard
+                            className="mb-6 text-center"
+                            padding="lg"
+                            variant="ultra"
+                            style={{
+                                backgroundColor: `rgba(255, 255, 255, ${chemistryResult.vibe.glassOpacity})`
+                            }}
+                        >
                             <div className="text-6xl mb-4">{chemistryResult.emoji}</div>
                             <h2 className="text-2xl font-bold text-charcoal mb-2">
                                 {chemistryResult.characterName}
                             </h2>
-                            <p className="text-lovely-pink font-medium mb-4">
+                            <p
+                                className="font-medium mb-4"
+                                style={{ color: chemistryResult.vibe.themeColor }}
+                            >
                                 "{chemistryResult.subtitle}"
                             </p>
 
+                            {/* Vibe 키워드 */}
+                            <div className="flex flex-wrap justify-center gap-2 mb-4">
+                                {chemistryResult.vibe.keywords.map((keyword, idx) => (
+                                    <span
+                                        key={idx}
+                                        className="px-3 py-1 text-xs font-medium rounded-full text-white"
+                                        style={{ backgroundColor: chemistryResult.vibe.themeColor }}
+                                    >
+                                        {keyword}
+                                    </span>
+                                ))}
+                            </div>
+
                             {/* 조합 배지 */}
-                            <div className="flex flex-wrap justify-center gap-2 mb-6">
-                                <span className="px-3 py-1 bg-lovely-pink/10 text-lovely-pink text-xs font-medium rounded-full">
+                            <div className="flex flex-wrap justify-center gap-2 mb-2">
+                                <span className="px-3 py-1 bg-white/50 text-charcoal text-xs font-medium rounded-full">
                                     {getFaceTypeLabel(chemistryResult.faceType)}
                                 </span>
-                                <span className="px-3 py-1 bg-blue-100 text-blue-600 text-xs font-medium rounded-full">
+                                <span className="px-3 py-1 bg-white/50 text-charcoal text-xs font-medium rounded-full">
                                     {getTetoLevelLabel(chemistryResult.tetoLevel)}
                                 </span>
-                                <span className="px-3 py-1 bg-purple-100 text-purple-600 text-xs font-medium rounded-full">
+                                <span className="px-3 py-1 bg-white/50 text-charcoal text-xs font-medium rounded-full">
                                     {getMBTIGroupLabel(chemistryResult.mbtiGroup)}
                                 </span>
                             </div>
